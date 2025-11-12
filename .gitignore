@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Excel files (except examples)
+*.xlsx
+*.xls
+
+# Results folder
+results/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
