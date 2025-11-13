@@ -1,0 +1,168 @@
+SOP: DISCONTINUED ITEMS FINDER
+Simple Guide for Deactivating Discontinued Items in SAP B1
+
+📋 Quick Overview
+What it does: Finds vendor-discontinued items and creates a file to freeze them in SAP B1
+When to use: Monthly vendor updates, year-end cleanup, when vendor discontinues products
+Time needed: 15-20 minutes total
+
+✅ What You Need
+
+Python installed with pandas and openpyxl libraries
+Two files per vendor:
+
+V###_OITM.xlsx - Your current active items
+V###_DTW.xlsx - Vendor catalog with discontinued items
+
+
+
+
+📁 File Preparation
+Your OITM File
+ItemCode
+2278-BLACK-XS
+2278-BLACK-S
+2278-NAVY-M
+Vendor DTW File (Must have "DISCONTINUED" in Style Name)
+Vendor Style | Style Name              | Color | Size
+2278         | DISCONTINUED-Style 2278 | BLACK | XS
+2278         | DISCONTINUED-Style 2278 | BLACK | S
+Critical: The word "DISCONTINUED" must appear in the Style Name column
+
+🚀 Steps to Run
+1. Prepare Files
+
+Place both files in: C:\Users\it2\Downloads\
+Verify vendor codes match (V105 files with V105 files)
+Close all Excel windows
+
+2. Run Script
+bashcd C:\Users\it2\Downloads\vendor-price-matcher
+python find_discontinued_items.py
+3. Review Results
+Check C:\Users\it2\Downloads\results\:
+
+Deactivation files: V###_DEACTIVATE_DTW.xlsx
+Summary report: Deactivation_Summary_*.xlsx
+
+What to check:
+
+Match rate >85% = Good ✅
+Match rate <50% = Investigate ⚠️
+Review items list before importing
+
+
+📥 Import to SAP B1
+1. Open DTW
+
+Launch Data Transfer Workbench
+Select "Item Master Data" template
+Choose "Update" mode (NOT "Add")
+
+2. Load File
+
+Browse to: V###_DEACTIVATE_DTW.xlsx
+Map columns:
+
+ItemCode → ItemCode
+frozenFor → FrozenFor
+validFor → ValidFor
+
+
+
+3. Import
+
+Click Preview (verify looks correct)
+Click Import
+Wait for completion
+
+4. Verify
+
+Open random item in SAP B1
+Check: Frozen For = Yes, Valid For = No
+Test: Try creating Sales Order with item (should block)
+
+
+🎯 What Deactivation Does
+SettingEffectFrozen For = Y❌ Cannot create new ordersValid For = N❌ Won't appear in selection listsResult✅ Item exists but cannot be used
+Important: Items are NOT deleted - historical data remains intact
+
+⚠️ Common Issues
+No File Pairs Found
+Fix: Check file names match format: V105_OITM.xlsx and V105_DTW.xlsx
+No Discontinued Items Found
+Fix: Add "DISCONTINUED" text to vendor's Style Name column
+Items Don't Match (Low Match Rate)
+Fix: Verify style/color/size names match between files
+
+Check debug output in console
+Look for: DTW: 2278|BLACK|XS vs OITM: 2278|BLK|XS
+
+Python Not Found
+Fix: Install Python from python.org, then: pip install pandas openpyxl
+
+📝 Best Practices
+Before Running:
+
+✅ Backup OITM (optional but recommended)
+✅ Check for open orders with these items
+✅ Notify purchasing team
+
+Before Importing:
+
+✅ Review deactivation summary report
+✅ Verify items should be discontinued
+✅ Test with 5-10 items first (first time)
+
+After Importing:
+
+✅ Verify random items are frozen
+✅ Test transaction blocking
+✅ Notify warehouse/sales teams
+
+
+🔄 Workflow Example
+Monthly Vendor Update:
+
+Receive vendor price file with discontinued items
+Run vendor_price_matcher.py (update prices)
+Run find_discontinued_items.py (create deactivation file)
+Review both reports
+Import prices to SAP B1
+Import deactivations to SAP B1
+Done! ✅
+
+
+💡 Quick Tips
+
+Match rate >90% = Excellent, proceed
+Match rate 50-90% = Review removed items
+Match rate <50% = Don't import, investigate first
+No matches? Style/color/size names probably differ between files
+To reactivate: Import same file with frozenFor=N, validFor=Y
+
+
+📞 Need Help?
+Technical Issues: it@jauniforms.com
+Vendor Questions: Menchu (Purchasing)
+GitHub: https://github.com/JAITteam/vendor-price-matcher
+
+📋 Quick Checklist
+Pre-Flight:
+
+ Files named correctly (V###_OITM.xlsx, V###_DTW.xlsx)
+ "DISCONTINUED" appears in DTW Style Name column
+ Vendor codes match
+ Python and libraries installed
+
+Post-Import:
+
+ Verified items are frozen in SAP B1
+ Tested transaction blocking works
+ Team notified
+ Reports filed
+
+
+Version 1.0 | Updated: Nov 12, 2025 | JAITTEAM
+
+END OF DOCUMENT
