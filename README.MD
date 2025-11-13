@@ -3,7 +3,7 @@
 Two automated tools for SAP Business One Item Master Data management.
 
 ![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+
 
 ---
 
@@ -225,11 +225,6 @@ XL  → XLG
 
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License.
-
----
 
 ## 🎯 Workflow Summary
 
